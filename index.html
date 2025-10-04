@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>tripleactioncleaningsolutions — Blog & Before/After</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg:#0b0e14; --panel:#111622; --ink:#e6ebf7; --muted:#9aa6c5; --line:#1c2233;
+      --brand:#3ea6ff; --accent:#00e07b; --r:14px; --shadow:0 12px 30px rgba(5,10,20,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+
+    /* Header (sticky) */
+    .header{
+      position:sticky; top:0; z-index:60;
+      background:linear-gradient(180deg,#0d1526 0%, #0b0e14 100%);
+      border-bottom:1px solid var(--line);
+      backdrop-filter:saturate(1.2) blur(6px);
+    }
+    .bar{max-width:1200px;margin:0 auto;display:flex;gap:10px;align-items:center;padding:12px 16px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.3px}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px var(--accent)}
+    .brand span{font-size:18px}
+
+    .search{flex:1;display:flex;gap:8px}
+    .search input{flex:1;background:#0d1322;border:1px solid var(--line);color:var(--ink);padding:10px 12px;border-radius:10px}
+    .search button{background:var(--brand);border:0;color:#081220;font-weight:800;padding:10px 14px;border-radius:10px;cursor:pointer}
+
+    .sort{display:flex;align-items:center;gap:6px}
+    .sort select{background:#0d1322;border:1px solid var(--line);color:var(--ink);padding:10px;border-radius:10px}
+
+    /* Quick links (Main site / Reviews / Referral) */
+    .ql{display:flex; gap:8px; margin-left:8px}
+    .pill{
+      background:#0e1930; color:#bfe1ff; border:1px solid #213454;
+      padding:8px 12px; border-radius:999px; font-weight:800; font-size:12px; text-decoration:none;
+    }
+    .pill:hover{filter:brightness(1.15)}
+
+    /* Featured slider */
+    .featured{max-width:1200px;margin:8px auto 12px;padding:0 16px}
+    .slider{
+      position:relative;overflow:hidden;border-radius:var(--r);border:1px solid var(--line);background:#0f172a;
+    }
+    .track{display:flex;transition:transform .4s ease}
+    .slide{
+      min-width:100%; position:relative; height:340px;
+      background-size:cover; background-position:center;
+      /* bump vibrancy a bit */
+      filter:brightness(1.12) saturate(1.18);
+    }
+    /* lighten the dark veil so colors pop */
+    .slide::before{
+      content:""; position:absolute; inset:0;
+      background:linear-gradient(135deg, rgba(11,17,33,.20), rgba(6,10,22,.30));
+    }
+    .slide .overlay{position:absolute; inset:0; background: radial-gradient(1200px 500px at 20% -100px, rgba(62,166,255,.12), transparent 60%);}
+    .slide .info{position:absolute; left:16px; bottom:16px; right:16px; display:flex; gap:12px; align-items:center; justify-content:space-between;}
+    .tag{background:#14233a;border:1px solid #1f3354;color:#9ecbff;padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px}
+    .title{font-size:18px;font-weight:800;max-width:70%}
+    .navbtn{position:absolute; top:50%; transform:translateY(-50%); background:#0c1424cc;border:1px solid #24324c;color:#a4c9ff; padding:8px;border-radius:10px;cursor:pointer}
+    .navbtn:hover{filter:brightness(1.2)}
+    .navbtn.prev{left:10px} .navbtn.next{right:10px}
+
+    /* Review strip + referral banner */
+    .metaRow{max-width:1200px;margin:0 auto 8px; padding:0 16px; display:flex; gap:10px; flex-wrap:wrap}
+    .reviewStrip{
+      flex:1 1 600px; background:#0f1628; border:1px solid #22304a; border-radius:12px; padding:10px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .reviewStrip strong{font-size:14px}
+    .reviewStrip a{
+      margin-left:auto; background:#132341; color:#aedaff; border:1px solid #28466f;
+      padding:8px 12px; border-radius:10px; font-weight:800; text-decoration:none;
+    }
+    .reviewBtns{display:flex; gap:8px; margin-left:8px}
+    .reviewBtns a{background:#0e1930; color:#bfe1ff; border:1px solid #213454; padding:6px 10px; border-radius:8px; font-size:12px; text-decoration:none}
+    .refBanner{
+      flex:1 1 300px; background:#0f172a; border:1px solid #22304a; border-radius:12px; padding:10px 12px;
+      display:flex; align-items:center; gap:10px; justify-content:space-between;
+    }
+    .refBanner a{background:#1d8bff; color:#061325; font-weight:900; padding:8px 12px; border-radius:10px; text-decoration:none}
+
+    /* Collection (blog posts) */
+    .wrap{max-width:1200px;margin:0 auto;padding:8px 16px 40px}
+    .grid{display:grid; gap:14px; grid-template-columns: repeat(12, 1fr);}
+    @media (max-width:1100px){ .grid{grid-template-columns: repeat(8, 1fr);} }
+    @media (max-width:760px){ .grid{grid-template-columns: repeat(4, 1fr);} }
+    @media (max-width:520px){ .grid{grid-template-columns: repeat(2, 1fr);} }
+
+    .post{
+      grid-column: span 4; background:var(--panel); border:1px solid var(--line); border-radius:12px; overflow:hidden;
+      box-shadow: var(--shadow); transition:transform .08s ease, border-color .15s ease;
+    }
+    @media (max-width:1100px){ .post{grid-column: span 4;} }
+    @media (max-width:760px){ .post{grid-column: span 4;} }
+    @media (max-width:520px){ .post{grid-column: span 2;} }
+
+    .thumb{position:relative; aspect-ratio:16/9; background:linear-gradient(135deg,#142034,#0d1322); display:block; background-size:cover; background-position:center;}
+    .post .badge{position:absolute; left:8px; top:8px; font-size:12px; font-weight:800; background:#14233a; border:1px solid #1f3354; color:#9ecbff; padding:4px 8px; border-radius:999px;}
+    .post .body{padding:12px 12px 14px}
+    .post h3{margin:0 0 6px; font-size:15px; line-height:1.35}
+    .post h3 a{color:#cfe2ff; text-decoration:none}
+    .post h3 a:hover{text-decoration:underline}
+    .meta{color:var(--muted); font-size:12px; margin-bottom:6px}
+    .excerpt{color:#cbd5e1; font-size:13px; line-height:1.4}
+    .post:hover{transform:translateY(-2px);border-color:#2a3a57}
+
+    .loadmore{
+      display:block; margin:18px auto 0; padding:10px 16px; font-weight:800;
+      background:var(--brand); color:#081220; border:0; border-radius:10px; cursor:pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky header -->
+  <header class="header">
+    <div class="bar">
+      <div class="brand"><div class="dot"></div><span>tripleactioncleaningsolutions</span></div>
+
+      <div class="search">
+        <input id="q" type="search" placeholder="Search posts…" />
+        <button id="searchBtn">Search</button>
+      </div>
+
+      <div class="sort">
+        <label for="sortSel" style="font-size:12px;color:var(--muted)">Sort</label>
+        <select id="sortSel">
+          <option value="new">Newest</option>
+          <option value="views">Most Viewed</option>
+          <option value="len">Longest Read</option>
+        </select>
+      </div>
+
+      <!-- Quick links -->
+      <nav class="ql">
+        <a class="pill" href="https://tripleactioncleaningsolutions.com" id="mainSiteLink">Main Site</a>
+        <a class="pill" href="#reviews">Reviews</a>
+        <a class="pill" href="#referral">Referral</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Featured slider -->
+  <section class="featured">
+    <div class="slider" id="slider">
+      <div class="track" id="track">
+        <article class="slide" style="background-image:url('images/res2.png');" data-link="/posts/renovation-dust-walkthrough.html" data-title="Renovation Dust — Before & After Walkthrough">
+          <div class="overlay"></div>
+          <div class="info">
+            <span class="tag">Renovation</span>
+            <div class="title">Renovation Dust — Before & After Walkthrough</div>
+          </div>
+        </article>
+
+        <article class="slide" style="background-image:url('images/floor2.png');" data-link="/posts/commercial-lobby-restore.html" data-title="Commercial Lobby Floor Restore (Time-lapse)">
+          <div class="overlay"></div>
+          <div class="info">
+            <span class="tag">Floor Care</span>
+            <div class="title">Commercial Lobby Floor Restore (Time-lapse)</div>
+          </div>
+        </article>
+
+        <article class="slide" style="background-image:url('images/yard2.png');" data-link="/posts/spring-yard-cleanup.html" data-title="Spring Yard Cleanup — Haul Out & Mulch Edge">
+          <div class="overlay"></div>
+          <div class="info">
+            <span class="tag">Yard & Landscaping</span>
+            <div class="title">Spring Yard Cleanup — Haul Out & Mulch Edge</div>
+          </div>
+        </article>
+      </div>
+      <button class="navbtn prev" id="prev">‹</button>
+      <button class="navbtn next" id="next">›</button>
+    </div>
+  </section>
+
+  <!-- Reviews + Referral row -->
+  <div class="metaRow" id="reviews">
+    <div class="reviewStrip">
+      <strong>Read our reviews:</strong>
+      <div class="reviewBtns">
+        <a href="#" target="_blank" rel="noopener">Google</a>
+        <a href="#" target="_blank" rel="noopener">Yelp</a>
+        <a href="#" target="_blank" rel="noopener">Facebook</a>
+      </div>
+      <a href="/reviews.html">All Reviews</a>
+    </div>
+
+    <div class="refBanner" id="referral">
+      <div><strong>Refer a friend</strong> — you both get a credit.</div>
+      <a href="/referral.html">Get Referral Link</a>
+    </div>
+  </div>
+
+  <!-- Blog collection (reordered per your request) -->
+  <div class="wrap">
+    <section class="grid" id="grid" aria-label="Posts">
+      <!-- Row 1 -->
+      <article class="post" data-views="2140" data-date="2025-10-03" data-len="6">
+        <a class="thumb" href="/posts/weekly-home-reset.html" style="background-image:url('images/cart-sweep.png');" aria-label="Weekly Home Reset thumbnail">
+          <span class="badge">Residential</span>
+        </a>
+        <div class="body">
+          <div class="meta">Oct 3, 2025 • 6 min read</div>
+          <h3><a href="/posts/weekly-home-reset.html">Weekly Home Reset — Fast, Repeatable Sequence</a></h3>
+          <p class="excerpt">A tight order of operations for staying ahead without losing your weekend.</p>
+        </div>
+      </article>
+
+      <article class="post" data-views="4230" data-date="2025-09-21" data-len="5">
+        <a class="thumb" href="/posts/final-dust-after-reno.html" style="background-image:url('images/carpet-stand.png');" aria-label="Final Dust After Reno thumbnail">
+          <span class="badge">Renovation</span>
+        </a>
+        <div class="body">
+          <div class="meta">Sep 21, 2025 • 5 min read</div>
+          <h3><a href="/posts/final-dust-after-reno.html">Final Dust: The Pass That Stops It Coming Back</a></h3>
+          <p class="excerpt">Why dust lingers after a build—and how to shut it down for good.</p>
+        </div>
+      </article>
+
+      <article class="post" data-views="2210" data-date="2025-09-08" data-len="4">
+        <a class="thumb" href="/posts/event-venue-reset.html" style="background-image:url('images/cart-event.png');" aria-label="Event Venue Reset thumbnail">
+          <span class="badge">Event Cleanup</span>
+        </a>
+        <div class="body">
+          <div class="meta">Sep 8, 2025 • 4 min read</div>
+          <h3><a href="/posts/event-venue-reset.html">Venue Reset in Under 60 Minutes</a></h3>
+          <p class="excerpt">A simple plan that gets staff and space back on track quickly.</p>
+        </div>
+      </article>
+
+      <!-- Row 2 -->
+      <article class="post" data-views="2980" data-date="2025-09-15" data-len="7">
+        <a class="thumb" href="/posts/fall-yard-cleanup.html" style="background-image:url('images/cart-yard.png');" aria-label="Fall Yard Cleanup thumbnail">
+          <span class="badge">Yard & Landscaping</span>
+        </a>
+        <div class="body">
+          <div class="meta">Sep 15, 2025 • 7 min read</div>
+          <h3><a href="/posts/fall-yard-cleanup.html">Fall Yard Cleanup — Haul, Edge, Mulch</a></h3>
+          <p class="excerpt">A simple flow that makes curb appeal happen fast.</p>
+        </div>
+      </article>
+
+      <article class="post" data-views="9876" data-date="2025-09-28" data-len="8">
+        <a class="thumb" href="/posts/lobby-strip-refinish.html" style="background-image:url('images/cart-floor.png');" aria-label="Commercial Lobby Strip & Refinish thumbnail">
+          <span class="badge">Commercial</span>
+        </a>
+        <div class="body">
+          <div class="meta">Sep 28, 2025 • 8 min read</div>
+          <h3><a href="/posts/lobby-strip-refinish.html">Commercial Lobby Strip & Refinish — What Actually Matters</a></h3>
+          <p class="excerpt">Avoid the common pitfalls and make high-traffic floors look new again.</p>
+        </div>
+      </article>
+
+      <article class="post" data-views="1530" data-date="2025-09-10" data-len="3">
+        <a class="thumb" href="/posts/streak-free-windows.html" style="background-image:url('images/cart-window.png');" aria-label="Streak-Free Windows thumbnail">
+          <span class="badge">Windows</span>
+        </a>
+        <div class="body">
+          <div class="meta">Sep 10, 2025 • 3 min read</div>
+          <h3><a href="/posts/streak-free-windows.html">Streak-Free Ground-Level Windows</a></h3>
+          <p class="excerpt">Tools, order, and the one mistake that causes haze.</p>
+        </div>
+      </article>
+    </section>
+
+    <button class="loadmore" id="loadMore">Load more</button>
+  </div>
+
+  <script>
+    // ----- Featured slider (click goes to post) + AUTOPLAY -----
+    (function(){
+      const slider = document.getElementById('slider');
+      const track  = document.getElementById('track');
+      const slides = track.children;
+      let idx = 0, timer;
+
+      function go(i){
+        idx = (i + slides.length) % slides.length;
+        track.style.transform = `translateX(-${idx*100}%)`;
+      }
+      function start(){ timer = setInterval(()=> go(idx+1), 4000); }
+      function stop(){ clearInterval(timer); }
+
+      document.getElementById('prev').onclick = ()=> go(idx-1);
+      document.getElementById('next').onclick = ()=> go(idx+1);
+      [...slides].forEach(s => s.addEventListener('click', () => {
+        const link = s.dataset.link || '#';
+        window.location.href = link;
+      }));
+
+      // autoplay with pause on hover
+      slider.addEventListener('mouseenter', stop);
+      slider.addEventListener('mouseleave', start);
+      start();
+    })();
+
+    // ----- Search / Sort on posts -----
+    const grid = document.getElementById('grid');
+    const cards = [...grid.querySelectorAll('.post')];
+
+    function applyFilters(){
+      const q = document.getElementById('q').value.trim().toLowerCase();
+      const sortVal = document.getElementById('sortSel').value;
+
+      // Filter by search (title + excerpt)
+      cards.forEach(c=>{
+        const title = c.querySelector('h3').textContent.toLowerCase();
+        const ex = (c.querySelector('.excerpt')?.textContent || '').toLowerCase();
+        c.style.display = (!q || title.includes(q) || ex.includes(q)) ? '' : 'none';
+      });
+
+      // Sort visible
+      const visible = cards.filter(c=>c.style.display!=='none');
+      visible.sort((a,b)=>{
+        if (sortVal==='views') return (+b.dataset.views) - (+a.dataset.views);
+        if (sortVal==='len')   return (+b.dataset.len)   - (+a.dataset.len);
+        return new Date(b.dataset.date) - new Date(a.dataset.date);
+      });
+      visible.forEach(el=>grid.appendChild(el));
+    }
+
+    document.getElementById('searchBtn').addEventListener('click', applyFilters);
+    document.getElementById('q').addEventListener('keydown', e=>{ if(e.key==='Enter') applyFilters(); });
+    document.getElementById('sortSel').addEventListener('change', applyFilters);
+
+    // ----- Load more demo (creates more post cards you can replace later) -----
+    document.getElementById('loadMore').addEventListener('click', ()=>{
+      const tpl = cards[0];
+      for(let i=0;i<6;i++){
+        const clone = tpl.cloneNode(true);
+        clone.querySelector('a.thumb').setAttribute('href', '#');
+        clone.querySelector('.badge').textContent = 'Blog';
+        clone.querySelector('.meta').textContent = 'Aug 1, 2025 • 5 min read';
+        clone.querySelector('h3 a').textContent = 'New Post — Replace Title';
+        clone.querySelector('.excerpt').textContent = 'Short summary preview goes here.';
+        clone.dataset.views = Math.floor(Math.random()*9000)+500;
+        clone.dataset.len = Math.floor(Math.random()*9)+2;
+        clone.dataset.date = new Date(Date.now()-Math.random()*3.2e9).toISOString().slice(0,10);
+        grid.appendChild(clone);
+      }
+      applyFilters();
+    });
+
+    applyFilters();
+  </script>
+</body>
+</html>
